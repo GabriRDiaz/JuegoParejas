@@ -47,7 +47,6 @@ public class Ventana extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Funciona");
 				remove(Buscar);
 				remove(Pulse);
 				remove(Nombre);
