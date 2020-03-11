@@ -25,20 +25,34 @@ public class Boton extends JButton {
 		this.fila = fila;
 		this.columna = columna;
 		this.valor = valor;
+		setBackground(Color.GRAY);
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				pulsar();
+				if(pulsado == true) {
+					JOptionPane.showMessageDialog(tablero,
+							"Pulse un botón distinto", "Error",
+							JOptionPane.WARNING_MESSAGE);
+				}else {
+					pulsar();
+				}
 			}	
 		});	
 }
 	private void pulsar() {
 		this.pulsado = true;
-		setBackground(Color.CYAN);
+		setBackground(Color.WHITE);
 		setText(""+getValor());
-		this.Tablero.pulsarComprobar(this);
+		this.tablero.pulsarComprobar(this);
 	}
+	
+	public void ocultar() {
+		this.pulsado = false;
+		setBackground(Color.GRAY);
+		setText("");
+	}
+	
 	public int getValor() {
 		return this.valor;
 	}
