@@ -103,6 +103,53 @@ public class Ventana extends JFrame {
 		dificultadJuego.setAccelerator(KeyStroke.getKeyStroke("ctrl D"));
 		menuOpciones.add(dificultadJuego);
 		
+		dificultadJuego.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Ventana dial = new Ventana();
+				Dialogo dialogo = new Dialogo(dial);
+				revalidate();
+			}
+		});
+		
+		guardarPartida.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		cargarPartida.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		salirJuego.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		almacenarRes.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		dificultadJuego.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		return barra;
 	}
 
