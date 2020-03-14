@@ -11,8 +11,6 @@ import javax.swing.JOptionPane;
 
 import org.liceolapaz.des.grd.Tablero;
 
-import com.liceolapaz.des.jprf.Boton;
-
 public class Boton extends JButton {
 	private Tablero tablero;
 	private int fila;
