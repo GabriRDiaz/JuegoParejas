@@ -41,6 +41,8 @@ public class Ventana extends JFrame {
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		ImageIcon img = new ImageIcon(getClass().getResource("/iconCelta.png"));
+		this.setIconImage(img.getImage());
 		botonInicio();
 		labels();
 	}
