@@ -34,6 +34,7 @@ public class Ventana extends JFrame {
 	JLabel Pulse = new JLabel("Pulse en la img para jugar");
 	JLabel Nombre = new JLabel("Autor: Gabriel R.Díaz");
 	JButton imgInicio = new JButton();
+	public Tablero tablero = null;
 	public Ventana() {
 		super("Buscar parejas - Gabriel Rodríguez Díaz");
 		setSize(1024, 768);
@@ -47,10 +48,10 @@ public class Ventana extends JFrame {
 		labels();
 	}
 
-	private Tablero juegoSimple() {
+	public Tablero juegoSimple() {
 		
-		Tablero tableroSimple = new Tablero(this,4,3);
-		return tableroSimple;
+		tablero = new Tablero(this,4,3);
+		return tablero;
 	}
 	
 	private JMenuBar barra() {
