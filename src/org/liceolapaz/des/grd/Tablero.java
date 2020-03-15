@@ -19,7 +19,7 @@ import javax.swing.KeyStroke;
 import org.liceolapaz.des.grd.Boton;
 import org.liceolapaz.des.grd.Ventana;
 
-public class Tablero extends JPanel {
+public class Tablero extends JPanel{
 	private int columnas;
 	private int filas;
 	private Boton[][] botones;
@@ -36,7 +36,6 @@ public class Tablero extends JPanel {
 		valoresCartas();
 	}
 	
-
 	private void crearBotones() {
 		this.botones = new Boton[this.filas][this.columnas];
 		for (int fila = 0; fila < this.filas; fila++) {
@@ -63,30 +62,27 @@ public class Tablero extends JPanel {
 			repetir++;
 		}
 	}
-	public void pulsarComprobar(Boton boton){
-		if(boton1 == null) {
+
+	public void pulsarComprobar(Boton boton) {
+		if (boton1 == null) {
 			boton1 = boton;
-		} else if(boton1 != null) {
+		} else if (boton1 != null) {
 			boton2 = boton;
 			comprobarCoincidencia();
 		}
-		
+
 	}
+
 	private void comprobarCoincidencia() {
-		if(boton1.getValor() == boton2.getValor()) {
-			JOptionPane.showMessageDialog(this.vTablero,
-					"Has acertado", "Acierto",
-					JOptionPane.WARNING_MESSAGE);
-					Principal.ventana.setIntentos(Principal.ventana.getIntentos());
-					Principal.ventana.setParejas(Principal.ventana.getParejas());
-		}
-		else {
-			if(boton1.getValor() != boton2.getValor()) {
-			JOptionPane.showMessageDialog(this.vTablero,
-					"Has fallado", "Fallo",
-					JOptionPane.WARNING_MESSAGE);
-					Principal.ventana.setIntentos(Principal.ventana.getIntentos());
-			ocultarBotones();
+		if (boton1.getValor() == boton2.getValor()) {
+			JOptionPane.showMessageDialog(this.vTablero, "Has acertado", "Acierto", JOptionPane.WARNING_MESSAGE);
+			Principal.ventana.setIntentos(Principal.ventana.getIntentos());
+			Principal.ventana.setParejas(Principal.ventana.getParejas());
+		} else {
+			if (boton1.getValor() != boton2.getValor()) {
+				JOptionPane.showMessageDialog(this.vTablero, "Has fallado", "Fallo", JOptionPane.WARNING_MESSAGE);
+				Principal.ventana.setIntentos(Principal.ventana.getIntentos());
+				ocultarBotones();
 			}
 		}
 		boton1 = null;
@@ -97,4 +93,5 @@ public class Tablero extends JPanel {
 		boton1.ocultar();
 		boton2.ocultar();
 	}
+	
 }

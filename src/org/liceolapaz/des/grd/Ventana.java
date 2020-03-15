@@ -11,8 +11,8 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-
-import org.liceolapaz.des.Ventana;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,12 +25,25 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Ventana extends JFrame {
 	JLabel Buscar = new JLabel("Buscar Parejas");
@@ -40,10 +53,14 @@ public class Ventana extends JFrame {
 	JLabel lbNIntentos;
 	JLabel lbNParejas;
 	Tablero tablero;
+	JLabel tiempo;
+	Timer tempo = null;
+	private int time;
 	public int intentos = 0;
-	public int parejas =6;
+	public int parejas = 6;
 	private int filasCustom;
 	private int colCustom;
+
 	public Ventana() {
 		super("Buscar parejas - Gabriel Rodríguez Díaz");
 		setSize(1024, 768);
@@ -56,13 +73,15 @@ public class Ventana extends JFrame {
 		botonInicio();
 		labels();
 	}
+	
+
 	public void nuevoJuego() {
-		 JOptionPane.showMessageDialog(null, "Has ganado en "+intentos+" intentos. Genio, lince, figura",
-					"Enhorabuena",JOptionPane.INFORMATION_MESSAGE);
-	    	int respuesta = JOptionPane.showConfirmDialog(Ventana.this, "¿Quieres jugar otra partida?",
-					"Nuevo documento", JOptionPane.YES_NO_OPTION);
-			if (respuesta == JOptionPane.YES_OPTION) {
-				juegoSimple();
+		JOptionPane.showMessageDialog(null, "Has ganado en " + intentos + " intentos. Genio, lince, figura",
+				"Enhorabuena", JOptionPane.INFORMATION_MESSAGE);
+		int respuesta = JOptionPane.showConfirmDialog(Ventana.this, "¿Quieres jugar otra partida?", "Nuevo documento",
+				JOptionPane.YES_NO_OPTION);
+		if (respuesta == JOptionPane.YES_OPTION) {
+			juegoSimple();
 		} else {
 			System.exit(0);
 		}
@@ -70,127 +89,125 @@ public class Ventana extends JFrame {
 	
 	public Tablero juegoCustom(int filas, int columnas) {
 		this.remove(tablero);
-		tablero = new Tablero(filas,columnas);
+		tablero = new Tablero(filas, columnas);
 		this.add(tablero);
-		parejas = filas*columnas /2;
+		parejas = filas * columnas / 2;
 		intentos = 0;
-		lbNIntentos.setText(""+intentos);
-		lbNParejas.setText(""+parejas);
+		lbNIntentos.setText("" + intentos);
+		lbNParejas.setText("" + parejas);
 		revalidate();
 		return tablero;
 	}
-	
+
 	public Tablero juegoSimple() {
-		if(tablero == null) {
-		tablero = new Tablero(4,3);
-		revalidate();
-		return tablero;
-		}
-		else {
+		if (tablero == null) {
+			tablero = new Tablero(4, 3);
+			revalidate();
+			return tablero;
+		} else {
 			this.remove(tablero);
-			tablero = new Tablero(4,3);
+			tablero = new Tablero(4, 3);
 			this.add(tablero);
 			parejas = 6;
 			intentos = 0;
-			lbNIntentos.setText(""+intentos);
+			lbNIntentos.setText("" + intentos);
 			lbNParejas.setText("6");
+			time = 0;
+			tiempo.revalidate();
 			revalidate();
 			return tablero;
 		}
 	}
-	
+
+
 	private JMenuBar barra() {
 		JMenuBar barra = new JMenuBar();
-		//Menú Partida
+		// Menú Partida
 		JMenu menuPartida = new JMenu("Partida");
 		menuPartida.setMnemonic(KeyEvent.VK_P);
 		barra.add(menuPartida);
-		//Menú Opciones
+		// Menú Opciones
 		JMenu menuOpciones = new JMenu("Opciones");
 		menuOpciones.setMnemonic(KeyEvent.VK_P);
 		barra.add(menuOpciones);
-		
-		//Nueva
+
+		// Nueva
 		JMenuItem nuevaPartida = new JMenuItem("Nueva Partida");
-		//archivoNuevo.setIcon(new ImageIcon(getClass().getResource("/nuevo.png")));
+		// archivoNuevo.setIcon(new ImageIcon(getClass().getResource("/nuevo.png")));
 		nuevaPartida.setMnemonic(KeyEvent.VK_N);
 		nuevaPartida.setAccelerator(KeyStroke.getKeyStroke("ctrl N"));
 		menuPartida.add(nuevaPartida);
-		
-		//Guardar
+
+		// Guardar
 		JMenuItem guardarPartida = new JMenuItem("Guardar Partida");
-		//archivoNuevo.setIcon(new ImageIcon(getClass().getResource("/nuevo.png")));
+		// archivoNuevo.setIcon(new ImageIcon(getClass().getResource("/nuevo.png")));
 		guardarPartida.setMnemonic(KeyEvent.VK_N);
 		guardarPartida.setAccelerator(KeyStroke.getKeyStroke("ctrl G"));
 		menuPartida.add(guardarPartida);
-		
-		//Cargar
+
+		// Cargar
 		JMenuItem cargarPartida = new JMenuItem("Cargar Partida");
-		//archivoNuevo.setIcon(new ImageIcon(getClass().getResource("/nuevo.png")));
+		// archivoNuevo.setIcon(new ImageIcon(getClass().getResource("/nuevo.png")));
 		cargarPartida.setMnemonic(KeyEvent.VK_N);
 		cargarPartida.setAccelerator(KeyStroke.getKeyStroke("ctrl C"));
 		menuPartida.add(cargarPartida);
-		
-		//Salir
+
+		// Salir
 		JMenuItem salirJuego = new JMenuItem("Salir");
-		//archivoNuevo.setIcon(new ImageIcon(getClass().getResource("/nuevo.png")));
+		// archivoNuevo.setIcon(new ImageIcon(getClass().getResource("/nuevo.png")));
 		salirJuego.setMnemonic(KeyEvent.VK_N);
 		salirJuego.setAccelerator(KeyStroke.getKeyStroke("ctrl Q"));
 		menuPartida.add(salirJuego);
-		
-		//Almacenar
+
+		// Almacenar
 		JMenuItem almacenarRes = new JMenuItem("Almacenar Resultado");
-		//archivoNuevo.setIcon(new ImageIcon(getClass().getResource("/nuevo.png")));
+		// archivoNuevo.setIcon(new ImageIcon(getClass().getResource("/nuevo.png")));
 		almacenarRes.setMnemonic(KeyEvent.VK_N);
 		menuOpciones.add(almacenarRes);
-		
-		//Dificultad
+
+		// Dificultad
 		JMenuItem dificultadJuego = new JMenuItem("Dificultad");
-		//archivoNuevo.setIcon(new ImageIcon(getClass().getResource("/nuevo.png")));
+		// archivoNuevo.setIcon(new ImageIcon(getClass().getResource("/nuevo.png")));
 		dificultadJuego.setMnemonic(KeyEvent.VK_N);
 		dificultadJuego.setAccelerator(KeyStroke.getKeyStroke("ctrl D"));
 		menuOpciones.add(dificultadJuego);
-		
+
 		dificultadJuego.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Dialogo dialogo = new Dialogo(Ventana.this);
 			}
 		});
-		
+
 		guardarPartida.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		cargarPartida.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		salirJuego.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
 		almacenarRes.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
 		});
 		nuevaPartida.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				juegoSimple();
@@ -201,47 +218,57 @@ public class Ventana extends JFrame {
 
 	public JPanel footer() {
 		JPanel footer = new JPanel();
-			footer.setLayout(new FlowLayout(FlowLayout.LEFT));
-			//Intentos
-			JLabel lbIntentos = new JLabel("Intentos");
-			lbIntentos.setBorder(new LineBorder(Color.BLACK, 2));
-			lbIntentos.setPreferredSize(new Dimension(200, 100));
-			lbIntentos.setHorizontalAlignment(SwingConstants.CENTER);
-			footer.add(lbIntentos);
-			//N intentos
-			lbNIntentos = new JLabel(""+intentos);
-			lbNIntentos.setBorder(new LineBorder(Color.BLACK, 3));
-			lbNIntentos.setPreferredSize(new Dimension(150, 100));
-			lbNIntentos.setHorizontalAlignment(SwingConstants.CENTER);
-			footer.add(lbNIntentos);
-			//Parejas
-			JLabel lbParejas= new JLabel("Parejas");
-			lbParejas.setBorder(new LineBorder(Color.BLACK, 3));
-			lbParejas.setPreferredSize(new Dimension(150, 100));
-			lbParejas.setHorizontalAlignment(SwingConstants.CENTER);
-			footer.add(lbParejas);
-			// N Parejas
-			lbNParejas = new JLabel(""+parejas);
-			lbNParejas.setBorder(new LineBorder(Color.BLACK, 3));
-			lbNParejas.setPreferredSize(new Dimension(150, 100));
-			lbNParejas.setHorizontalAlignment(SwingConstants.CENTER);
-			footer.add(lbNParejas);
-			// Img
-			JButton celta = new JButton();
-			celta.setIcon(new ImageIcon(getClass().getResource("/CeltaV.png")));
-			celta.setBorderPainted(false);
-			celta.setFocusPainted(false);
-			celta.setContentAreaFilled(false);
-			footer.add(celta);
-			// Tiempo
-			JLabel lbTiempo = new JLabel("56");
-			lbTiempo.setBorder(new LineBorder(Color.BLACK, 3));
-			lbTiempo.setPreferredSize(new Dimension(150, 100));
-			lbTiempo.setHorizontalAlignment(SwingConstants.CENTER);
-			footer.add(lbTiempo);
+		footer.setLayout(new FlowLayout(FlowLayout.LEFT));
+		// Intentos
+		JLabel lbIntentos = new JLabel("Intentos");
+		lbIntentos.setBorder(new LineBorder(Color.BLACK, 2));
+		lbIntentos.setPreferredSize(new Dimension(200, 100));
+		lbIntentos.setHorizontalAlignment(SwingConstants.CENTER);
+		footer.add(lbIntentos);
+		// N intentos
+		lbNIntentos = new JLabel("" + intentos);
+		lbNIntentos.setBorder(new LineBorder(Color.BLACK, 3));
+		lbNIntentos.setPreferredSize(new Dimension(150, 100));
+		lbNIntentos.setHorizontalAlignment(SwingConstants.CENTER);
+		footer.add(lbNIntentos);
+		// Parejas
+		JLabel lbParejas = new JLabel("Parejas");
+		lbParejas.setBorder(new LineBorder(Color.BLACK, 3));
+		lbParejas.setPreferredSize(new Dimension(150, 100));
+		lbParejas.setHorizontalAlignment(SwingConstants.CENTER);
+		footer.add(lbParejas);
+		// N Parejas
+		lbNParejas = new JLabel("" + parejas);
+		lbNParejas.setBorder(new LineBorder(Color.BLACK, 3));
+		lbNParejas.setPreferredSize(new Dimension(150, 100));
+		lbNParejas.setHorizontalAlignment(SwingConstants.CENTER);
+		footer.add(lbNParejas);
+		// Img
+		JButton celta = new JButton();
+		celta.setIcon(new ImageIcon(getClass().getResource("/CeltaV.png")));
+		celta.setBorderPainted(false);
+		celta.setFocusPainted(false);
+		celta.setContentAreaFilled(false);
+		footer.add(celta);
+		// Tiempo
+		JLabel lbTiempo = new JLabel();
+		lbTiempo.setBorder(new LineBorder(Color.BLACK, 3));
+		lbTiempo.setPreferredSize(new Dimension(150, 100));
+		lbTiempo.setHorizontalAlignment(SwingConstants.CENTER);
+		tiempo = new JLabel();
+		tempo = new Timer();
+		TimerTask timerTask = new TimerTask() {
+			public void run() {
+				time++;
+				lbTiempo.setText(time + "");
+				revalidate();
+			}
+		};
+		tempo.scheduleAtFixedRate(timerTask, 0, 1000);
+		footer.add(lbTiempo);
 		return footer;
 	}
-	
+
 	public void botonInicio() {
 		imgInicio.setIcon(new ImageIcon(getClass().getResource("/FTP.jpg")));
 		imgInicio.setBorderPainted(false);
@@ -249,7 +276,7 @@ public class Ventana extends JFrame {
 		imgInicio.setContentAreaFilled(false);
 		imgInicio.setBounds(250, 100, 500, 420);
 		imgInicio.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				remove(Buscar);
@@ -259,8 +286,9 @@ public class Ventana extends JFrame {
 				crearInterfaz();
 			}
 		});
-	    add(imgInicio);
+		add(imgInicio);
 	}
+
 	public void crearInterfaz() {
 		setLayout(new BorderLayout());
 		add(juegoSimple(), BorderLayout.CENTER);
@@ -268,6 +296,7 @@ public class Ventana extends JFrame {
 		add(footer(), BorderLayout.PAGE_END);
 		revalidate();
 	}
+
 	public void labels() {
 //		Buscar
 		Buscar.setFont(new Font("Default", 1, 20));
@@ -282,15 +311,15 @@ public class Ventana extends JFrame {
 		Nombre.setBounds(410, 590, 300, 50);
 		add(Nombre);
 	}
-	
+
 	public void setIntentos(int intentos) {
-		lbNIntentos.setText(""+intentos);
+		lbNIntentos.setText("" + intentos);
 		revalidate();
 	}
 
 	public void setParejas(int parejas) {
-		lbNParejas.setText(""+parejas);
-		if(parejas == 0) {
+		lbNParejas.setText("" + parejas);
+		if (parejas == 0) {
 			nuevoJuego();
 		} else {
 			revalidate();
@@ -305,6 +334,11 @@ public class Ventana extends JFrame {
 	public int getParejas() {
 		parejas--;
 		return parejas;
+	}
+
+
+	public void setTimeOff(int time) {
+		this.time = time;
 	}
 
 }
