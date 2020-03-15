@@ -168,5 +168,4 @@ public class Dialogo extends JDialog {
 		bgModes.add(customMode);
 		return botones;
 	}
-
 }

@@ -34,9 +34,13 @@ public class Ventana extends JFrame {
 	JLabel Pulse = new JLabel("Pulse en la img para jugar");
 	JLabel Nombre = new JLabel("Autor: Gabriel R.Díaz");
 	JButton imgInicio = new JButton();
+	JLabel lbNIntentos;
+	JLabel lbNParejas;
 	Tablero tablero;
-	public int filasCustom;
-	public int colCustom;
+	public int intentos = 0;
+	public int parejas =6;
+	private int filasCustom;
+	private int colCustom;
 	public Ventana() {
 		super("Buscar parejas - Gabriel Rodríguez Díaz");
 		setSize(1024, 768);
@@ -54,6 +58,10 @@ public class Ventana extends JFrame {
 		this.remove(tablero);
 		tablero = new Tablero(filas,columnas);
 		this.add(tablero);
+		parejas = filas*columnas /2;
+		intentos = 0;
+		lbNIntentos.setText(""+intentos);
+		lbNParejas.setText(""+parejas);
 		revalidate();
 		return tablero;
 	}
@@ -61,12 +69,16 @@ public class Ventana extends JFrame {
 	public Tablero juegoSimple() {
 		if(tablero == null) {
 		tablero = new Tablero(4,3);
+		revalidate();
 		return tablero;
 		}
 		else {
 			this.remove(tablero);
 			tablero = new Tablero(4,3);
 			this.add(tablero);
+			intentos = 0;
+			lbNIntentos.setText(""+intentos);
+			lbNParejas.setText("6");
 			revalidate();
 			return tablero;
 		}
@@ -182,7 +194,7 @@ public class Ventana extends JFrame {
 			lbIntentos.setHorizontalAlignment(SwingConstants.CENTER);
 			footer.add(lbIntentos);
 			//N intentos
-			JLabel lbNIntentos = new JLabel("5");
+			lbNIntentos = new JLabel(""+intentos);
 			lbNIntentos.setBorder(new LineBorder(Color.BLACK, 3));
 			lbNIntentos.setPreferredSize(new Dimension(150, 100));
 			lbNIntentos.setHorizontalAlignment(SwingConstants.CENTER);
@@ -194,7 +206,7 @@ public class Ventana extends JFrame {
 			lbParejas.setHorizontalAlignment(SwingConstants.CENTER);
 			footer.add(lbParejas);
 			// N Parejas
-			JLabel lbNParejas = new JLabel("6");
+			lbNParejas = new JLabel(""+parejas);
 			lbNParejas.setBorder(new LineBorder(Color.BLACK, 3));
 			lbNParejas.setPreferredSize(new Dimension(150, 100));
 			lbNParejas.setHorizontalAlignment(SwingConstants.CENTER);
@@ -255,13 +267,25 @@ public class Ventana extends JFrame {
 		Nombre.setBounds(410, 590, 300, 50);
 		add(Nombre);
 	}
-
-	public void setFilasCustom(int filasCustom) {
-		this.filasCustom = filasCustom;
+	
+	public void setIntentos(int intentos) {
+		lbNIntentos.setText(""+intentos);
+		revalidate();
 	}
 
-	public void setColCustom(int colCustom) {
-		this.colCustom = colCustom;
+	public void setParejas(int parejas) {
+		lbNParejas.setText(""+parejas);
+		revalidate();
+	}
+
+	public int getIntentos() {
+		intentos++;
+		return intentos;
+	}
+
+	public int getParejas() {
+		parejas--;
+		return parejas;
 	}
 
 }

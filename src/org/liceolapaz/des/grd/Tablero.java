@@ -77,12 +77,15 @@ public class Tablero extends JPanel {
 			JOptionPane.showMessageDialog(this.vTablero,
 					"Has acertado", "Acierto",
 					JOptionPane.WARNING_MESSAGE);
+					Principal.ventana.setIntentos(Principal.ventana.getIntentos());
+					Principal.ventana.setParejas(Principal.ventana.getParejas());
 		}
 		else {
 			if(boton1.getValor() != boton2.getValor()) {
 			JOptionPane.showMessageDialog(this.vTablero,
 					"Has fallado", "Fallo",
 					JOptionPane.WARNING_MESSAGE);
+					Principal.ventana.setIntentos(Principal.ventana.getIntentos());
 			ocultarBotones();
 			}
 		}
