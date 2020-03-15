@@ -5,11 +5,14 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+
+import org.liceolapaz.des.Ventana;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -53,6 +56,17 @@ public class Ventana extends JFrame {
 		botonInicio();
 		labels();
 	}
+	public void nuevoJuego() {
+		 JOptionPane.showMessageDialog(null, "Has ganado en "+intentos+" intentos. Genio, lince, figura",
+					"Enhorabuena",JOptionPane.INFORMATION_MESSAGE);
+	    	int respuesta = JOptionPane.showConfirmDialog(Ventana.this, "¿Quieres jugar otra partida?",
+					"Nuevo documento", JOptionPane.YES_NO_OPTION);
+			if (respuesta == JOptionPane.YES_OPTION) {
+				juegoSimple();
+		} else {
+			System.exit(0);
+		}
+	}
 	
 	public Tablero juegoCustom(int filas, int columnas) {
 		this.remove(tablero);
@@ -76,6 +90,7 @@ public class Ventana extends JFrame {
 			this.remove(tablero);
 			tablero = new Tablero(4,3);
 			this.add(tablero);
+			parejas = 6;
 			intentos = 0;
 			lbNIntentos.setText(""+intentos);
 			lbNParejas.setText("6");
@@ -275,7 +290,11 @@ public class Ventana extends JFrame {
 
 	public void setParejas(int parejas) {
 		lbNParejas.setText(""+parejas);
-		revalidate();
+		if(parejas == 0) {
+			nuevoJuego();
+		} else {
+			revalidate();
+		}
 	}
 
 	public int getIntentos() {
