@@ -34,7 +34,9 @@ public class Ventana extends JFrame {
 	JLabel Pulse = new JLabel("Pulse en la img para jugar");
 	JLabel Nombre = new JLabel("Autor: Gabriel R.Díaz");
 	JButton imgInicio = new JButton();
-	public Tablero tablero = null;
+	Tablero tablero;
+	public int filasCustom;
+	public int colCustom;
 	public Ventana() {
 		super("Buscar parejas - Gabriel Rodríguez Díaz");
 		setSize(1024, 768);
@@ -47,11 +49,27 @@ public class Ventana extends JFrame {
 		botonInicio();
 		labels();
 	}
-
-	public Tablero juegoSimple() {
-		
-		tablero = new Tablero(this,4,3);
+	
+	public Tablero juegoCustom(int filas, int columnas) {
+		this.remove(tablero);
+		tablero = new Tablero(filas,columnas);
+		this.add(tablero);
+		revalidate();
 		return tablero;
+	}
+	
+	public Tablero juegoSimple() {
+		if(tablero == null) {
+		tablero = new Tablero(4,3);
+		return tablero;
+		}
+		else {
+			this.remove(tablero);
+			tablero = new Tablero(4,3);
+			this.add(tablero);
+			revalidate();
+			return tablero;
+		}
 	}
 	
 	private JMenuBar barra() {
@@ -110,9 +128,7 @@ public class Ventana extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Ventana dial = new Ventana();
-				Dialogo dialogo = new Dialogo(dial);
-				revalidate();
+				Dialogo dialogo = new Dialogo(Ventana.this);
 			}
 		});
 		
@@ -146,11 +162,11 @@ public class Ventana extends JFrame {
 				
 			}
 		});
-		dificultadJuego.addActionListener(new ActionListener() {
+		nuevaPartida.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				juegoSimple();
 			}
 		});
 		return barra;
@@ -213,16 +229,18 @@ public class Ventana extends JFrame {
 				remove(Pulse);
 				remove(Nombre);
 				remove(imgInicio);
-				setLayout(new BorderLayout());
-				add(juegoSimple(), BorderLayout.CENTER);
-				add(barra(), BorderLayout.PAGE_START);
-				add(footer(), BorderLayout.PAGE_END);
-				revalidate();
+				crearInterfaz();
 			}
 		});
 	    add(imgInicio);
 	}
-	
+	public void crearInterfaz() {
+		setLayout(new BorderLayout());
+		add(juegoSimple(), BorderLayout.CENTER);
+		add(barra(), BorderLayout.PAGE_START);
+		add(footer(), BorderLayout.PAGE_END);
+		revalidate();
+	}
 	public void labels() {
 //		Buscar
 		Buscar.setFont(new Font("Default", 1, 20));
@@ -237,4 +255,13 @@ public class Ventana extends JFrame {
 		Nombre.setBounds(410, 590, 300, 50);
 		add(Nombre);
 	}
+
+	public void setFilasCustom(int filasCustom) {
+		this.filasCustom = filasCustom;
+	}
+
+	public void setColCustom(int colCustom) {
+		this.colCustom = colCustom;
+	}
+
 }

@@ -28,7 +28,7 @@ public class Dialogo extends JDialog {
 		public int columnas;
 		private JTextField jTxtFilas = new JTextField();
 		private JTextField jTxtCol = new JTextField();
-		
+		public Tablero custom;
 	public Dialogo(Frame parent) {
 		super(parent, "Nivel de dificultad");
 		setVisible(true);
@@ -70,7 +70,7 @@ public class Dialogo extends JDialog {
 					}
 						if(filas*columnas %2 == 0) {
 							Dialogo.this.dispose();
-							//Ventana.tablero = new Tablero(,filas,columnas);
+							Principal.ventana.juegoCustom(filas,columnas);
 					   } else {
 						   JOptionPane.showMessageDialog(null, "Las casillas no son pares, gañán",
 							"Error",JOptionPane.ERROR_MESSAGE);
@@ -168,4 +168,5 @@ public class Dialogo extends JDialog {
 		bgModes.add(customMode);
 		return botones;
 	}
+
 }

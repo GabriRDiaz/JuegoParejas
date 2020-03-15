@@ -27,15 +27,15 @@ public class Tablero extends JPanel {
 	private Boton boton2;
 	public Ventana vTablero;
 
-	public Tablero(Ventana vTablero, int filas, int columnas) {
+	public Tablero(int filas, int columnas) {
 		super();
-		this.vTablero = vTablero;
 		this.filas = filas;
 		this.columnas = columnas;
 		setLayout(new GridLayout(filas, columnas));
 		crearBotones();
 		valoresCartas();
 	}
+	
 
 	private void crearBotones() {
 		this.botones = new Boton[this.filas][this.columnas];
